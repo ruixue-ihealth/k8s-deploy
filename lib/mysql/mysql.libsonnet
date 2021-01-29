@@ -8,6 +8,9 @@
   local volumeMount = $.core.v1.volumeMount,
   local configMap = $.core.v1.configMap,
   local volume = $.core.v1.volume,
+  local pvcName = $._config.name + '-pvc',
+  local configmapName = $._config.name + 'config',
+
   local envs = [
     {
       name: 'MYSQL_ROOT_PASSWORD',
@@ -24,7 +27,7 @@
     {
       name: 'data',
       persistentVolumeClaim: {
-        claimName: $._config.pvcName,
+        claimName: pvcName,
       },
     },
   ],
@@ -42,8 +45,8 @@
                     ) +
                     deployment.mixin.metadata.withNamespace($._config.namespace) +
                     deployment.mixin.spec.template.spec.withVolumesMixin([
-                      volume.fromPersistentVolumeClaim('data', $._config.pvcName),
-                      volume.fromConfigMap('config', $._config.configmapName),
+                      volume.fromPersistentVolumeClaim('data', pvcName),
+                      volume.fromConfigMap('config', configmapName),
                     ]) +
                     deployment.spec.template.spec.withInitContainers(
                       [
@@ -60,11 +63,11 @@
                  service.mixin.metadata.withNamespace($._config.namespace),
 
   mysql_storage: pvc.new() + pvc.mixin.metadata.withNamespace($._config.namespace) +
-                 pvc.mixin.metadata.withName($._config.pvcName) +
+                 pvc.mixin.metadata.withName(pvcName) +
                  pvc.mixin.spec.withStorageClassName('ebs-sc') +
                  pvc.mixin.spec.withAccessModes('ReadWriteOnce') +
                  pvc.mixin.spec.resources.withRequests({ storage: $._config.storage }),
-  mysql_config: configMap.new($._config.configmapName) +
+  mysql_config: configMap.new(configmapName) +
                 configMap.mixin.metadata.withNamespace($._config.namespace) +
                 configMap.withData({ 'my.cnf': (importstr 'my.cnf') }),
 

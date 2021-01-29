@@ -8,7 +8,7 @@
   local volumeMount = $.core.v1.volumeMount,
   local configMap = $.core.v1.configMap,
   local volume = $.core.v1.volume,
-
+  local pvcName = $._config.name + '-pvc',
   local volumeMounts = [
     volumeMount.new('data', '/tf'),
 
@@ -17,7 +17,7 @@
     {
       name: 'data',
       persistentVolumeClaim: {
-        claimName: $._config.pvcName,
+        claimName: pvcName,
       },
     },
   ],
@@ -33,13 +33,13 @@
                       ) +
                       deployment.mixin.metadata.withNamespace($._config.namespace) +
                       deployment.mixin.spec.template.spec.withVolumesMixin([
-                        volume.fromPersistentVolumeClaim('data', $._config.pvcName),
+                        volume.fromPersistentVolumeClaim('data', pvcName),
                       ]),
   jupyter_service: $.util.serviceFor(self.jupyter_deployment) +
                    service.mixin.metadata.withNamespace($._config.namespace),
 
   jupyter_storage: pvc.new() + pvc.mixin.metadata.withNamespace($._config.namespace) +
-                   pvc.mixin.metadata.withName($._config.pvcName) +
+                   pvc.mixin.metadata.withName(pvcName) +
                    pvc.mixin.spec.withStorageClassName('ebs-sc') +
                    pvc.mixin.spec.withAccessModes('ReadWriteOnce') +
                    pvc.mixin.spec.resources.withRequests({ storage: $._config.storage }),

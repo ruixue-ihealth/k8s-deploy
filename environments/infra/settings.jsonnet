@@ -17,6 +17,7 @@
     enabled: true,
     config: {
       namespace: 'demo',
+      name:'jupyter'
     },
   },
 
