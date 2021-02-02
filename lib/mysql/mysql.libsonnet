@@ -8,6 +8,7 @@
   local volumeMount = $.core.v1.volumeMount,
   local configMap = $.core.v1.configMap,
   local volume = $.core.v1.volume,
+
   local pvcName = $._config.name + '-pvc',
   local configmapName = $._config.name + 'config',
 
@@ -40,7 +41,8 @@
                         container.new($._config.name, $._config.image) +
                         container.withPorts([port.new('mysql', $._config.port)]) +
                         container.withEnv(envs) +
-                        container.withVolumeMounts(volumeMounts),
+                        container.withVolumeMounts(volumeMounts) +
+                        $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest),
                       ],
                     ) +
                     deployment.mixin.metadata.withNamespace($._config.namespace) +

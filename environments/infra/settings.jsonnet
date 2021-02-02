@@ -1,5 +1,5 @@
 {
-  local MYSQL_ROOT_PASSWORD = std.extVar('MYSQL_ROOT_PASSWORD'),
+  local MYSQL_ROOT_PASSWORD = 'root',
   mysql: {
     enabled: true,
     config: {
@@ -8,13 +8,13 @@
     },
   },
   mongodb: {
-    enabled: true,
+    enabled: false,
     config: {
       namespace: 'demo',
     },
   },
   jupyter: {
-    enabled: true,
+    enabled: false,
     config: {
       namespace: 'demo',
       name:'jupyter'
