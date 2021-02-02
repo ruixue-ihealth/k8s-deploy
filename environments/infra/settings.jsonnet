@@ -8,18 +8,22 @@
     },
   },
   mongodb: {
-    enabled: false,
+    enabled: true,
     config: {
       namespace: 'demo',
     },
   },
   jupyter: {
-    enabled: false,
+    enabled: true,
     config: {
       namespace: 'demo',
-      name:'jupyter'
     },
   },
-
+  connector: {
+    enabled: true,
+    config: {
+      namespace: 'demo',
+    },
+  },
 
 }

@@ -2,6 +2,7 @@ local settings = import './settings.jsonnet';
 local jupyter = import 'jupyter/jupyter.libsonnet';
 local mongodb = import 'mongodb/mongodb.libsonnet';
 local mysql = import 'mysql/mysql.libsonnet';
+local connector = import 'connector/connector.libsonnet';
 
 {
   mysql: (
@@ -25,5 +26,11 @@ local mysql = import 'mysql/mysql.libsonnet';
     }
     else {}
   ),
-
+  connector: (
+    if settings.connector.enabled
+    then connector {
+      _config+:: settings.connector.config,
+    }
+    else {}
+  ),
 }
