@@ -43,7 +43,8 @@
                           container.withPorts([port.new('mongodb', $._config.port)]) +
                           container.withEnv(envs) +
                           container.withVolumeMounts(volumeMounts) +
-                          $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest),
+                          $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest) +
+                          $.util.resourcesLimits($._config.cpuLimit, $._config.memoryLimit),
                         ],
                       ) +
                       deployment.mixin.metadata.withNamespace($._config.namespace) +

@@ -8,6 +8,8 @@
     MONGO_INITDB_ROOT_PASSWORD: 'root',
     storage: '200Mi',
     cpuRequest: '0.2',
-    memoryRequest: '0.5',
+    cpuLimit: '1',
+    memoryRequest: '500Mi',
+    memoryLimit: '4Gi',
   },
 }

@@ -32,7 +32,8 @@
                           container.new($._config.name, $._config.image) +
                           container.withPorts([port.new('jupyter', $._config.port)]) +
                           container.withVolumeMounts(volumeMounts) +
-                          $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest),
+                          $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest) +
+                          $.util.resourcesLimits($._config.cpuLimit, $._config.memoryLimit),
                         ],
                       ) +
                       deployment.mixin.metadata.withNamespace($._config.namespace) +
