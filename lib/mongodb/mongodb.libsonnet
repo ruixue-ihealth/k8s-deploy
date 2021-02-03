@@ -6,8 +6,10 @@
   local service = $.core.v1.service,
   local pvc = $.core.v1.persistentVolumeClaim,
   local volumeMount = $.core.v1.volumeMount,
-  local configMap = $.core.v1.configMap,
+
   local volume = $.core.v1.volume,
+  local pvcName = $._config.name + '-pvc',
+
   local envs = [
     {
       name: 'MONGO_INITDB_ROOT_USERNAME',
@@ -28,7 +30,7 @@
     {
       name: 'data',
       persistentVolumeClaim: {
-        claimName: $._config.pvcName,
+        claimName: pvcName,
       },
     },
   ],
@@ -40,12 +42,14 @@
                           container.new($._config.name, $._config.image) +
                           container.withPorts([port.new('mongodb', $._config.port)]) +
                           container.withEnv(envs) +
-                          container.withVolumeMounts(volumeMounts),
+                          container.withVolumeMounts(volumeMounts) +
+                          $.util.resourcesRequests($._config.cpuRequest, $._config.memoryRequest) +
+                          $.util.resourcesLimits($._config.cpuLimit, $._config.memoryLimit),
                         ],
                       ) +
                       deployment.mixin.metadata.withNamespace($._config.namespace) +
                       deployment.mixin.spec.template.spec.withVolumesMixin([
-                        volume.fromPersistentVolumeClaim('data', $._config.pvcName),
+                        volume.fromPersistentVolumeClaim('data', pvcName),
                       ]) +
                       deployment.spec.template.spec.withInitContainers(
                         [
@@ -62,7 +66,7 @@
                    service.mixin.metadata.withNamespace($._config.namespace),
 
   mongodb_storage: pvc.new() + pvc.mixin.metadata.withNamespace($._config.namespace) +
-                   pvc.mixin.metadata.withName($._config.pvcName) +
+                   pvc.mixin.metadata.withName(pvcName) +
                    pvc.mixin.spec.withStorageClassName('ebs-sc') +
                    pvc.mixin.spec.withAccessModes('ReadWriteOnce') +
                    pvc.mixin.spec.resources.withRequests({ storage: $._config.storage }),

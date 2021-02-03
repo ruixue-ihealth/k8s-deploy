@@ -1,5 +1,5 @@
 {
-  local MYSQL_ROOT_PASSWORD = std.extVar('MYSQL_ROOT_PASSWORD'),
+  local MYSQL_ROOT_PASSWORD = 'root',
   mysql: {
     enabled: true,
     config: {
@@ -19,6 +19,11 @@
       namespace: 'demo',
     },
   },
-
+  connector: {
+    enabled: true,
+    config: {
+      namespace: 'demo',
+    },
+  },
 
 }
